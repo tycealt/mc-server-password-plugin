@@ -1,0 +1,7 @@
+# The password used for the server
+# CHANGE ME
+password: password
+
+# The number of incorrect attempts a player can submit before being banned
+# Use value -1 for unlimited attempts
+allowed-attempts: 3

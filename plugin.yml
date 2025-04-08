@@ -1,0 +1,30 @@
+name: ServerPassword
+main: com.talt.serverPassword.ServerPassword
+version: 1.0
+api-version: 1.21.4
+commands:
+  setPlayerAttempts:
+    description: Change the amount of attempts registered for a specific player
+    usage: /setPlayerAttempts <player> <amount>
+    permission: serverpassword.admin
+    permission-message: '&cYou don''t have permission!'
+  verify:
+    description: Set the verification status of a specific player to true
+    usage: /verify <player>
+    permission: serverpassword.admin
+    permission-message: '&cYou don''t have permission!'
+  unverify:
+    description: Set the verification status of a specific player to false
+    usage: /unverify <player>
+    permission: serverpassword.admin
+    permission-message: '&cYou don''t have permission!'
+  setServerPassword:
+    description: Changes the required password. Updates the config.yml with new password as well
+    usage: /setServerPassword <password>
+    permission: serverpassword.admin
+    permission-message: '&cYou don''t have permission!'
+  audit:
+    description: Check player's verification status and attempt count
+    usage: /audit <player>
+    permission: serverpassword.admin
+    permission-message: '&cYou don''t have permission!'
