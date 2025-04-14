@@ -37,6 +37,9 @@ public class PasswordEvents implements Listener{
 	private final ServerPassword plugin;
 	private String pass;
 	private int attemptsAllowed;
+	private double periodicSaveTime;
+	private boolean needsSave;
+	private boolean alwaysSave;
 	private HashSet<Player> restrictedPlayers = new HashSet<>();
 	private HashMap<String, JSONObject> playerDataMap = new HashMap<>();
 	private HashMap<String, String> nameToUUIDMap = new HashMap<>();
@@ -46,6 +49,7 @@ public class PasswordEvents implements Listener{
 		validateAndScanConfig();
 		jsonFile = new File(plugin.getDataFolder(), "verifiedPlayers.json");
 		loadPlayerData();
+		needsSave = false;
 	}
 	
 	public void changePassword(String newPass) {
@@ -60,13 +64,15 @@ public class PasswordEvents implements Listener{
 	}
 	
 	public void validateAndScanConfig() {
-		if (!plugin.getConfig().contains("password") || !plugin.getConfig().contains("allowed-attempts")) {
+		if (!plugin.getConfig().contains("password") || !plugin.getConfig().contains("allowed-attempts") || !plugin.getConfig().contains("periodic-save-time") || !plugin.getConfig().contains("always-auto-save")) {
 			plugin.getLogger().severe("Invalid config detected! Shutting down plugin...");
 	        plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 		try {
 			pass = plugin.getConfig().getString("password");
 			attemptsAllowed = plugin.getConfig().getInt("allowed-attempts");
+			periodicSaveTime = plugin.getConfig().getDouble("periodic-save-time");
+			alwaysSave = plugin.getConfig().getBoolean("always-auto-save");
 		}
 		catch (Exception e) {
 			plugin.getLogger().severe("Invalid config detected! Shutting down plugin...");
@@ -225,6 +231,7 @@ public class PasswordEvents implements Listener{
         player.put("attempts", attempts);      
         playerDataMap.put(uuid, player);
         nameToUUIDMap.put(name, uuid);
+        needsSave = true;
     }
     
     public void loadPlayerData() {
@@ -267,6 +274,7 @@ public class PasswordEvents implements Listener{
                 writer.write("\n]");
                 writer.flush();
                 
+                needsSave = false;
                 plugin.getLogger().info("Saved " + playerDataMap.size() + " players");
             } catch (Exception e) {
                 plugin.getLogger().severe("Save failed: " + e.getMessage());
@@ -275,8 +283,17 @@ public class PasswordEvents implements Listener{
     }
     
     public void schedulePeriodicSave() {
-        Bukkit.getScheduler().runTaskTimer(plugin, this::savePlayerData, 6000L, 6000L); // Every 5 minutes
-        plugin.getLogger().info("Saved JSON data.");
+    	long ticks = (long) (periodicSaveTime * 60 * 20);
+    	
+    	if (periodicSaveTime > 0) {
+	        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+	        	if (alwaysSave) {
+	        		savePlayerData();
+	        	} else if (needsSave) {
+	        		savePlayerData();
+	        	}
+	        	}, ticks, ticks);
+    	}
     }
     
     public synchronized void verifyPlayer(String uuid) {

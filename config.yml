@@ -5,3 +5,12 @@ password: password
 # The number of incorrect attempts a player can submit before being banned
 # Use value -1 for unlimited attempts
 allowed-attempts: 3
+
+# The time in minutes between automatic file saves for the verifiedPlayers.json
+# Set to 0 to disable automatic file saves completely (NOT RECOMMENDED)
+periodic-save-time: 5
+
+# This determines if the plugin saves the verified player JSON every period, regardless if any information has been updated
+# Set to false, the plugin only saves when changes are detected
+# Set to true, this can unnecessarily waste system resources
+always-auto-save: false
