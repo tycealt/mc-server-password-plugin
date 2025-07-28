@@ -13,11 +13,15 @@ Installation is very easy for this plugin. Simply download the JAR from the rele
 The next time you start your server, the plugin should be active and have automatically created its required config and data storage file.
 
 ## Default Config Info
-This plugin's default configurations include a **password** setting and a **allowed-attempts** setting.
+This plugin's default configurations include a **password**, **allowed-attempts**, **periodic-save-time**, and **always-auto-save** settings.
 
 **Password**: This is one method of how you set the required password to play on the server. By default this is set to "password", so it is recommended that you change this value.
 
 **Allowed-attempts**: This is the amount of incorrect attempts a player is allowed before they are banned. By default this value is 3. This can be set to a value of -1 for unlimited attempts.
+
+**Periodic-save-time**: This is the time in minutes between automatic file saves. While not recommended, this can be set to 0 to completely disable periodic saves.
+
+**Always-auto-save**: This determines if the plugin saves the verified player JSON every period, regardless if any information has been updated. Set to false, the plugin only saves when changes are detected. Set to true, this can unnecessarily waste system resources.
 
 ## Plugin Commands
      /setPlayerAttempts
